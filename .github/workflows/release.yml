@@ -18,7 +18,7 @@ jobs:
       - name: Build
         run: |
           mvn -B -ntp -Pnative package
-          docker build -f src/main/docker/Dockerfile.native -t registry.heroku.com/xunit-reporter/web
+          docker build . -f src/main/docker/Dockerfile.native -t registry.heroku.com/xunit-reporter/web
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
