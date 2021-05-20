@@ -16,15 +16,15 @@ import org.apache.maven.plugin.surefire.log.api.NullConsoleLogger;
 import org.apache.maven.plugins.surefire.report.TestSuiteXmlParser;
 import org.xml.sax.SAXException;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+@ApplicationScoped
 public class SurefireArtifactScanner implements ArtifactScanner {
     @Override
     public void scan(ReportContext context, InputStream artifact) {

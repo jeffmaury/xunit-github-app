@@ -15,20 +15,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
 
 @ApplicationScoped
 public class ArtifactProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactProcessor.class);
 
+    @Inject
+    Instance<ArtifactScanner> scanners;
+
     void processArtifact(ReportContext context, Path path) {
         try {
-            Iterator<ArtifactScanner> scanners = ArtifactScanner.getProviders();
-            while (scanners.hasNext()) {
-                    scanners.next().scan(context, Files.newInputStream(path));
+            for(ArtifactScanner scanner : scanners) {
+                LOGGER.debug("Processing with scanner: " + scanner);
+                scanner.scan(context, Files.newInputStream(path));
             }
             Files.delete(path);
         } catch (IOException e) {
