@@ -13,14 +13,7 @@ package me.xunitreporter.spi;
 import me.xunitreporter.ReportContext;
 
 import java.io.InputStream;
-import java.nio.file.Path;
-import java.util.Iterator;
-import java.util.ServiceLoader;
 
 public interface ArtifactScanner {
     void scan(ReportContext context, InputStream artifact);
-
-    static Iterator<ArtifactScanner> getProviders() {
-        return ServiceLoader.load(ArtifactScanner.class).iterator();
-    }
 }

@@ -10,14 +10,22 @@
  ******************************************************************************/
 package me.xunitreporter.spi;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
+
+import javax.enterprise.inject.Instance;
+import javax.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@QuarkusTest
 public class ArtifactScannerTest {
+
+    @Inject
+    Instance<ArtifactScanner> scanners;
 
     @Test
     void testProviders() {
-        assertTrue(ArtifactScanner.getProviders().hasNext());
+        assertTrue(scanners.iterator().hasNext());
     }
 }
