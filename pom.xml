@@ -49,6 +49,10 @@
       <artifactId>quarkus-qute</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jaxp</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.maven.surefire</groupId>
       <artifactId>surefire-report-parser</artifactId>
       <version>3.0.0-M5</version>
