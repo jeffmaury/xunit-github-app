@@ -42,6 +42,8 @@ public class XUnitBot {
         if (config == null) {
             config = XUnitReporterConfigFile.DEFAULT;
         }
+        LOGGER.debug("Repository " + workflowRunPayload.getRepository().getFullName());
+        LOGGER.debug("Workflow run " + workflowRunPayload.getWorkflowRun().getId());
         PagedIterator<GHArtifact> artifacts = workflowRunPayload.getWorkflowRun().listArtifacts().iterator();
         ReportContext context = new ReportContext();
         while (artifacts.hasNext()) {
