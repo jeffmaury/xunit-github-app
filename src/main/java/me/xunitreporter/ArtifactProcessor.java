@@ -31,8 +31,12 @@ public class ArtifactProcessor {
     void processArtifact(ReportContext context, Path path) {
         try {
             for(ArtifactScanner scanner : scanners) {
-                LOGGER.debug("Processing with scanner: " + scanner);
-                scanner.scan(context, Files.newInputStream(path));
+                LOGGER.debug("Processing artifact " +path + " with scanner: " + scanner);
+                try {
+                    scanner.scan(context, Files.newInputStream(path));
+                } catch (Exception e) {
+                    LOGGER.error(e.getLocalizedMessage(), e);
+                }
             }
             Files.delete(path);
         } catch (IOException e) {
