@@ -28,6 +28,8 @@ import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class XUnitBot {
 
@@ -37,6 +39,9 @@ public class XUnitBot {
 
     @Inject
     ArtifactProcessor artifactProcessor;
+
+    @Inject
+    LogProcessor logProcessor;
 
     void onWorkflow(@WorkflowRun.Completed GHEventPayload.WorkflowRun workflowRunPayload, @ConfigFile(CONFIG_FILE_NAME) XUnitReporterConfigFile config) throws IOException {
         if (config == null) {
@@ -49,10 +54,17 @@ public class XUnitBot {
         while (artifacts.hasNext()) {
             try {
                 GHArtifact artifact = artifacts.next();
-                artifactProcessor.processArtifact(context, artifact.download(s -> toPath(s)));
+                artifactProcessor.processArtifact(context, artifact.download(s -> toPath("artifact", s)));
             } catch (IOException e) {
                 LOGGER.error(e.getLocalizedMessage(), e);
             }
+        }
+        if (context.isEmpty()) {
+            workflowRunPayload.getWorkflowRun().downloadLogs(s -> {
+                Path p = toPath("log", s);
+                logProcessor.processLogs(context, p);
+                return null;
+            });
         }
         if (!context.isEmpty()) {
             GHCommit commit = workflowRunPayload.getRepository().getCommit(workflowRunPayload.getWorkflowRun().getHeadSha());
@@ -60,8 +72,8 @@ public class XUnitBot {
         }
     }
 
-    private Path toPath(InputStream s) throws IOException {
-        Path path = Files.createTempFile("artifact", "zip");
+    private Path toPath(String prefix, InputStream s) throws IOException {
+        Path path = Files.createTempFile(prefix, "zip");
         Files.copy(s, path, StandardCopyOption.REPLACE_EXISTING);
         return path;
     }

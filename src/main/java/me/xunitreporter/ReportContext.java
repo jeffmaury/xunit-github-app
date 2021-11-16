@@ -42,6 +42,13 @@ public class ReportContext {
         }
     }
 
+    public void report(int success, int failed, int errored, int skipped) {
+        this.success += success;
+        this.failed += failed;
+        this.errored += errored;
+        this.skipped += skipped;
+    }
+
     public int getSuccess() {
         return success;
     }
