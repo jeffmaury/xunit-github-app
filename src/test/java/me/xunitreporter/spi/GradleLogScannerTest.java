@@ -32,7 +32,7 @@ public class GradleLogScannerTest {
     @Test
     void checkFailedAndSkipped() {
         Path path = Paths.get("src/test/resources/gradle-failed-skipped.zip");
-        LogProcessor.processLogs(context, path, Collections.singleton(new GradleLogScanner()));
+        LogProcessor.processLogs(context, path, Collections.singleton(new GradleLogScanner()), false);
         assertEquals(1, context.getSuccess());
         assertEquals(1, context.getFailed());
         assertEquals(1, context.getSkipped());
@@ -42,10 +42,20 @@ public class GradleLogScannerTest {
     @Test
     void checkFailed() {
         Path path = Paths.get("src/test/resources/gradle-failed.zip");
-        LogProcessor.processLogs(context, path, Collections.singleton(new GradleLogScanner()));
+        LogProcessor.processLogs(context, path, Collections.singleton(new GradleLogScanner()), false);
         assertEquals(1, context.getSuccess());
         assertEquals(1, context.getFailed());
         assertEquals(0, context.getSkipped());
+        assertEquals(0, context.getErrored());
+    }
+
+    @Test
+    void checkFailedFromGH() {
+        Path path = Paths.get("src/test/resources/logs_2383.zip");
+        LogProcessor.processLogs(context, path, Collections.singleton(new GradleLogScanner()), false);
+        assertEquals(429, context.getSuccess());
+        assertEquals(30, context.getFailed());
+        assertEquals(3, context.getSkipped());
         assertEquals(0, context.getErrored());
     }
 }

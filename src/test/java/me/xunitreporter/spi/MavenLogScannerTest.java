@@ -32,7 +32,7 @@ public class MavenLogScannerTest {
     @Test
     void checkMaven() {
         Path path = Paths.get("src/test/resources/logs_3.zip");
-        LogProcessor.processLogs(context, path, Collections.singleton(new MavenLogScanner()));
+        LogProcessor.processLogs(context, path, Collections.singleton(new MavenLogScanner()), false);
         assertEquals(1, context.getSuccess());
         assertEquals(1, context.getFailed());
         assertEquals(0, context.getSkipped());

@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 @ApplicationScoped
 public class MavenLogScanner implements LogScanner {
-    private static final Pattern PATTERN = Pattern.compile(".*Tests run: (\\d+), Failures: (\\d+), Errors: (\\d+), Skipped: (\\d+)$");
+    private static final Pattern PATTERN = Pattern.compile("(.*\\s)?Tests run: (\\d+), Failures: (\\d+), Errors: (\\d+), Skipped: (\\d+)$");
     @Override
     public void scan(ReportContext context, Reader r) {
         try {
@@ -31,10 +31,10 @@ public class MavenLogScanner implements LogScanner {
             while ((line = lr.readLine()) != null) {
                 Matcher m = PATTERN.matcher(line);
                 if (m.matches()) {
-                    int total = Integer.parseInt(m.group(1));
-                    int failed = Integer.parseInt(m.group(2));
-                    int errored = Integer.parseInt(m.group(3));
-                    int skipped = Integer.parseInt(m.group(4));
+                    int total = Integer.parseInt(m.group(2));
+                    int failed = Integer.parseInt(m.group(3));
+                    int errored = Integer.parseInt(m.group(4));
+                    int skipped = Integer.parseInt(m.group(5));
                     context.report(total - failed - errored - skipped, failed, errored, skipped);
                 }
             }

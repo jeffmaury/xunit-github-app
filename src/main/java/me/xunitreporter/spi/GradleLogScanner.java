@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 @ApplicationScoped
 public class GradleLogScanner implements LogScanner {
-    private static final Pattern GRADLE_TEST_LOGGING_PATTERN = Pattern.compile(".*(\\d+) tests completed(, (\\d+) failed)?(, (\\d+) skipped)?$");
+    private static final Pattern GRADLE_TEST_LOGGING_PATTERN = Pattern.compile("(.*\\s)?(\\d+) tests completed(, (\\d+) failed)?(, (\\d+) skipped)?$");
     @Override
     public void scan(ReportContext context, Reader r) {
         try {
@@ -31,9 +31,9 @@ public class GradleLogScanner implements LogScanner {
             while ((line = lr.readLine()) != null) {
                 Matcher m = GRADLE_TEST_LOGGING_PATTERN.matcher(line);
                 if (m.matches()) {
-                    int total = Integer.parseInt(m.group(1));
-                    int failed = Integer.parseInt(m.group(3));
-                    int skipped = m.start(4)!=(-1)?Integer.parseInt(m.group(5)):0;
+                    int total = Integer.parseInt(m.group(2));
+                    int failed = Integer.parseInt(m.group(4));
+                    int skipped = m.start(6)!=(-1)?Integer.parseInt(m.group(6)):0;
                     context.report(total - failed - skipped, failed, 0, skipped);
                 }
             }

@@ -34,10 +34,10 @@ public class LogProcessor {
     Instance<LogScanner> scanners;
 
     public void processLogs(ReportContext context, Path path) {
-        processLogs(context, path, scanners);
+        processLogs(context, path, scanners, true);
     }
 
-    public static void processLogs(ReportContext context, Path path, Iterable<LogScanner> scanners) {
+    public static void processLogs(ReportContext context, Path path, Iterable<LogScanner> scanners, boolean delete) {
         ZipEntry entry;
 
         try {
@@ -56,7 +56,9 @@ public class LogProcessor {
                     }
                 }
             }
-            Files.delete(path);
+            if (delete) {
+                Files.delete(path);
+            }
         } catch (IOException e) {
             LOGGER.error(e.getLocalizedMessage(), e);
         }
